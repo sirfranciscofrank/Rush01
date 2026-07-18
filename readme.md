@@ -47,10 +47,10 @@ main
  └─ ft_print_grid  print the solution (or "Error" if parse/solve failed)
 ```
 
-The grid is a single array `int grid[16]`. Cell (row, col) lives at
-`grid[row * 4 + col]`. That's why you see `pos / 4` (row) and `pos % 4`
-(column) everywhere: `pos` is a number from 0 to 15 that walks the grid
-left-to-right, top-to-bottom.
+The grid is a 2D array `int grid[4][4]`, so cell (row, col) is simply
+`grid[row][col]`. The solver still walks the cells with a single number
+`pos` from 0 to 15 (left-to-right, top-to-bottom): `pos / 4` gives the row,
+`pos % 4` gives the column.
 
 ---
 
@@ -85,8 +85,8 @@ left-to-right, top-to-bottom.
      - Place it, and if the clue checks still hold (`ft_check_partial`),
        recurse on `pos + 1`.
      - If the recursion succeeds, propagate the 1 all the way up.
-     - If it fails, **undo** the cell (`grid[pos] = 0`) and try the next
-       value. This "undo and try something else" is the *backtracking*.
+     - If it fails, **undo** the cell (`grid[row][col] = 0`) and try the
+       next value. This "undo and try something else" is the *backtracking*.
   3. If no value works, return 0 so the previous cell tries its next value.
 
   Because values are always tried in order 1→4 and cells in order 0→15, the
@@ -102,26 +102,30 @@ left-to-right, top-to-bottom.
 
 ### rules.c — the checks
 
-- `ft_is_safe(grid, pos, value)` — scans the row and the column of `pos`;
-  returns 0 if `value` is already there (Latin square rule).
-- `ft_check_row(grid, row, clues)` — copies the row, counts visible boxes from
-  the left and (via a reversed copy) from the right, compares with
-  `clues[8 + row]` and `clues[12 + row]`.
-- `ft_check_col(grid, col, clues)` — same idea for a column: visible from the
-  top vs `clues[col]`, from the bottom vs `clues[4 + col]`.
+- `ft_check_row(grid, row, clues)` — compares what you actually see from the
+  left with `clues[8 + row]`, and from the right with `clues[12 + row]`.
+- `ft_check_col(grid, col, clues)` — same for a column: from the top vs
+  `clues[col]`, from the bottom vs `clues[4 + col]`.
+- `ft_is_safe(grid, row, col, value)` — scans the row and the column in a
+  single loop; returns 0 if `value` is already there (Latin square rule).
 
-### lines.c — small helpers
+### views.c — the visibility algorithm
 
-- `ft_get_row` / `ft_get_col` — copy a row or a column into a 4-int array so
-  the counting code works the same for both.
-- `ft_reverse` — reverses a 4-int line. Looking from the right is just looking
-  from the left at the reversed line.
-- `ft_count_view` — **the visibility algorithm.** Walk the line keeping track
-  of the tallest box seen so far (`max`). Every time a box is taller than
-  `max`, it is visible: count it and update `max`.
+Four small functions, one per viewing direction, so each one reads exactly
+like the way you'd trace it by hand:
+
+- `ft_count_left(grid, row)` — walk the row left→right.
+- `ft_count_right(grid, row)` — walk the row right→left.
+- `ft_count_top(grid, col)` — walk the column top→bottom.
+- `ft_count_bottom(grid, col)` — walk the column bottom→top.
+
+All four use the same idea: keep track of the tallest box seen so far
+(`max`); every box taller than `max` is visible — count it and update `max`.
+No copying rows into temp arrays, no reversing: just walk the grid in the
+direction you are looking.
 
   ```
-  line = 2 1 4 3
+  line = 2 1 4 3   (looking from the left)
   2 > 0 → visible (count=1, max=2)
   1 < 2 → hidden
   4 > 2 → visible (count=2, max=4)
@@ -148,8 +152,8 @@ Column 1 seen from the top must show **4** boxes → the column has to be
 doesn't "know" this as a rule, but backtracking discovers it: any other
 arrangement fails `ft_check_col` and gets undone.
 
-Cell by cell it tries 1 in `grid[0]` → safe → not end of row/col → move on;
-1 in `grid[1]` → duplicate in row → try 2 → safe → … and so on. Each dead end
+Cell by cell it tries 1 in `grid[0][0]` → safe → not end of row/col → move
+on; 1 in `grid[0][1]` → duplicate in row → try 2 → safe → … Each dead end
 rolls back to the last choice point. The final grid:
 
 ```
@@ -171,8 +175,9 @@ followed by a newline.
 
 ## Questions an evaluator might ask
 
-- **Why `pos / 4` and `pos % 4`?** The grid is a flat 16-int array; division
-  gives the row, modulo gives the column.
+- **Why `pos / 4` and `pos % 4`?** The solver visits cells with a single
+  counter `pos` (0 to 15); division gives the row, modulo gives the column
+  of the 2D grid.
 - **What is backtracking?** Depth-first trial and error: place a value, go
   deeper; on failure, erase it and try the next value. Guaranteed to find a
   solution if one exists, because it explores every consistent possibility.
@@ -183,5 +188,9 @@ followed by a newline.
   order and values tried in a fixed order (1→4), so the search always visits
   candidate grids in the same sequence.
 - **Why no malloc?** Everything fits in fixed-size stack arrays
-  (`int grid[16]`, `int clues[16]`, `int line[4]`), so dynamic allocation is
-  unnecessary.
+  (`int grid[4][4]`, `int clues[16]`), so dynamic allocation is unnecessary.
+- **Why four counting functions instead of one?** Each direction gets its own
+  ten-line function (`ft_count_left`, `ft_count_right`, `ft_count_top`,
+  `ft_count_bottom`) that walks the grid exactly the way your eye would.
+  One clever parameterized function would be shorter, but four obvious ones
+  are easier to trace and defend in an evaluation.

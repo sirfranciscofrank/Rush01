@@ -6,30 +6,36 @@
 /*   By: ssaengsa <ssaengsa@student.42bangkok.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/17 17:41:12 by ssaengsa          #+#    #+#             */
-/*   Updated: 2026/07/17 17:41:13 by ssaengsa         ###   ########.fr       */
+/*   Updated: 2026/07/18 23:59:00 by ssaengsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 int		ft_parse(char *str, int *clues);
-int		ft_solve(int *grid, int pos, int *clues);
-void	ft_print_grid(int *grid);
+int		ft_solve(int grid[4][4], int pos, int *clues);
+void	ft_print_grid(int grid[4][4]);
 void	ft_print_error(void);
 
-void	ft_init_grid(int *grid)
+void	ft_init_grid(int grid[4][4])
 {
-	int	i;
+	int	row;
+	int	col;
 
-	i = 0;
-	while (i < 16)
+	row = 0;
+	while (row < 4)
 	{
-		grid[i] = 0;
-		i++;
+		col = 0;
+		while (col < 4)
+		{
+			grid[row][col] = 0;
+			col++;
+		}
+		row++;
 	}
 }
 
 int	main(int argc, char **argv)
 {
-	int	grid[16];
+	int	grid[4][4];
 	int	clues[16];
 
 	ft_init_grid(grid);

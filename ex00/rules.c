@@ -6,57 +6,41 @@
 /*   By: ssaengsa <ssaengsa@student.42bangkok.co    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/17 17:41:16 by ssaengsa          #+#    #+#             */
-/*   Updated: 2026/07/17 17:41:17 by ssaengsa         ###   ########.fr       */
+/*   Updated: 2026/07/18 23:59:00 by ssaengsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-void	ft_get_row(int *grid, int row, int *line);
-void	ft_get_col(int *grid, int col, int *line);
-void	ft_reverse(int *line, int *rev);
-int		ft_count_view(int *line);
+int	ft_count_left(int grid[4][4], int row);
+int	ft_count_right(int grid[4][4], int row);
+int	ft_count_top(int grid[4][4], int col);
+int	ft_count_bottom(int grid[4][4], int col);
 
-int	ft_check_row(int *grid, int row, int *clues)
+int	ft_check_row(int grid[4][4], int row, int *clues)
 {
-	int	line[4];
-	int	rev[4];
-
-	ft_get_row(grid, row, line);
-	ft_reverse(line, rev);
-	if (ft_count_view(line) != clues[8 + row])
+	if (ft_count_left(grid, row) != clues[8 + row])
 		return (0);
-	if (ft_count_view(rev) != clues[12 + row])
+	if (ft_count_right(grid, row) != clues[12 + row])
 		return (0);
 	return (1);
 }
 
-int	ft_check_col(int *grid, int col, int *clues)
+int	ft_check_col(int grid[4][4], int col, int *clues)
 {
-	int	line[4];
-	int	rev[4];
-
-	ft_get_col(grid, col, line);
-	ft_reverse(line, rev);
-	if (ft_count_view(line) != clues[col])
+	if (ft_count_top(grid, col) != clues[col])
 		return (0);
-	if (ft_count_view(rev) != clues[4 + col])
+	if (ft_count_bottom(grid, col) != clues[4 + col])
 		return (0);
 	return (1);
 }
 
-int	ft_is_safe(int *grid, int pos, int value)
+int	ft_is_safe(int grid[4][4], int row, int col, int value)
 {
-	int	row;
-	int	col;
 	int	i;
 
-	row = pos / 4;
-	col = pos % 4;
 	i = 0;
 	while (i < 4)
 	{
-		if (grid[row * 4 + i] == value)
-			return (0);
-		if (grid[i * 4 + col] == value)
+		if (grid[row][i] == value || grid[i][col] == value)
 			return (0);
 		i++;
 	}

@@ -34,7 +34,7 @@ void	ft_print_error(void)
 	ft_putstr("Error\n");
 }
 
-void	ft_print_grid(int *grid)
+void	ft_print_grid(int grid[4][4])
 {
 	int	row;
 	int	col;
@@ -45,7 +45,7 @@ void	ft_print_grid(int *grid)
 		col = 0;
 		while (col < 4)
 		{
-			ft_putchar('0' + grid[row * 4 + col]);
+			ft_putchar('0' + grid[row][col]);
 			if (col < 3)
 				ft_putchar(' ');
 			col++;
