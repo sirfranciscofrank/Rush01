@@ -69,6 +69,15 @@ well-formatted but contradictory clues.
 The strict parser is what catches the spacing cases: a valid input is
 exactly 31 characters (16 digits, 15 single spaces), nothing more.
 
+Evaluators sometimes also check the **exit status** right after a run:
+
+```bash
+echo $?
+```
+
+It must be `0` after a solved grid and `1` after any `Error` (bad
+arguments, bad format, or unsolvable clues).
+
 ## 5. Check line endings like the graders do (Git Bash / Linux only)
 
 ```bash
@@ -79,7 +88,18 @@ Each line must end with `$` and nothing after the last digit
 (no trailing space). On Windows you may see `^M$` — that's the Windows
 console, not your program; on Linux it will be clean.
 
-## 6. Full clean rebuild + main test in one line
+## 6. Norm check
+
+```bash
+norminette *.c
+```
+
+Every file must report `OK!`. What the norm cares about here: functions of
+25 lines max, 5 functions per file max, no `for` loops, tab indentation,
+and the 42 header at the top of each file **matching its filename** (that's
+why the header line inside `ft_rules.c` says `ft_rules.c`, not `rules.c`).
+
+## 7. Full clean rebuild + main test in one line
 
 PowerShell:
 
@@ -93,7 +113,7 @@ Git Bash / Linux:
 rm -f rush01 && cc -Wall -Wextra -Werror -o rush01 *.c && ./rush01 "4 3 2 1 1 2 2 2 4 3 2 1 1 2 2 2"
 ```
 
-## 7. Before turning in — checklist
+## 8. Before turning in — checklist
 
 - [ ] Compiles with `cc -Wall -Wextra -Werror -o rush01 *.c` (zero warnings)
 - [ ] Subject example prints the exact expected grid

@@ -42,12 +42,21 @@ is an error → print `Error`.
 
 ## How the program flows
 
+Every function is annotated with the file it lives in, so you can follow
+any call straight to its source:
+
 ```
-main
- ├─ ft_init_grid   fill grid with 0 (0 = empty cell)
- ├─ ft_parse       validate the string, extract the 16 clues
- ├─ ft_solve       backtracking: try to fill the grid
- └─ ft_print_grid  print the solution (or "Error" if parse/solve failed)
+main (main.c)
+ ├─ ft_init_grid        (main.c)      fill grid with 0 (0 = empty cell)
+ ├─ ft_parse            (ft_parse.c)  validate the string, extract 16 clues
+ ├─ ft_solve            (ft_solve.c)  backtracking: try to fill the grid
+ │   ├─ ft_is_safe        (ft_rules.c)  value not already in row/column?
+ │   └─ ft_check_partial  (ft_solve.c)  row or column just completed?
+ │       ├─ ft_check_row    (ft_rules.c) → ft_count_left / ft_count_right
+ │       └─ ft_check_col    (ft_rules.c) → ft_count_top / ft_count_bottom
+ │                                          (all four in ft_views.c)
+ └─ ft_print_grid       (ft_print.c)  print the solution
+                                      (or "Error" if parse/solve failed)
 ```
 
 The grid is a 2D array `int grid[4][4]`, so cell (row, col) is simply
@@ -58,6 +67,10 @@ top-to-bottom): `pos / 4` is the row, `pos % 4` is the column.
 ---
 
 ## File by file
+
+Six source files, one job each. Every file except `main.c` carries the
+classic 42 `ft_` prefix, matching the function names inside it — see a call
+to `ft_check_row` anywhere and you know it lives in `ft_rules.c`.
 
 ### main.c
 
