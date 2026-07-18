@@ -66,7 +66,7 @@ top-to-bottom): `pos / 4` is the row, `pos % 4` is the column.
   parses it, launches the solver from position 0, prints the result.
   Returns `1` on error, `0` on success.
 
-### parse.c
+### ft_parse.c
 
 - `ft_strlen` — string length (we can't use the libc one; only `write`,
   `malloc`, `free` are allowed).
@@ -78,7 +78,7 @@ top-to-bottom): `pos / 4` is the row, `pos % 4` is the column.
 - `ft_parse` — once the format is validated, converts each digit character
   to an int (`str[i * 2] - '0'`) and stores it in `clues[]`.
 
-### solve.c — the heart of the program (backtracking)
+### ft_solve.c — the heart of the program (backtracking)
 
 - `ft_solve(grid, pos, clues)` — tries to fill cell `pos`, then recursively
   the next one:
@@ -106,7 +106,7 @@ top-to-bottom): `pos / 4` is the row, `pos % 4` is the column.
   a check fails we abandon this branch immediately instead of filling the
   rest of the grid for nothing. This pruning is what makes the solver fast.
 
-### rules.c — the checks
+### ft_rules.c — the checks
 
 - `ft_check_row(grid, row, clues)` — compares what you actually see from
   the left with `clues[8 + row]`, and from the right with
@@ -116,7 +116,7 @@ top-to-bottom): `pos / 4` is the row, `pos % 4` is the column.
 - `ft_is_safe(grid, row, col, value)` — scans the row and the column in a
   single loop; returns 0 if `value` is already there (Latin square rule).
 
-### views.c — the visibility algorithm
+### ft_views.c — the visibility algorithm
 
 Four small functions, one per viewing direction, so each one reads exactly
 like the way you'd trace it by hand:

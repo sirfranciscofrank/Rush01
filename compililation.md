@@ -15,8 +15,8 @@ cc -Wall -Wextra -Werror -o rush01 *.c
 ```
 
 No output = success. It creates `rush01` (`rush01.exe` on Windows) from the
-six source files: `main.c`, `parse.c`, `solve.c`, `rules.c`, `views.c`,
-`ft_print.c`.
+six source files: `main.c`, `ft_parse.c`, `ft_solve.c`, `ft_rules.c`,
+`ft_views.c`, `ft_print.c`.
 
 > **Windows note:** if you get `ld returned 5 exit status`, an old
 > `rush01.exe` is still running or locked. Kill it, then recompile:
