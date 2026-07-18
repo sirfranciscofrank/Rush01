@@ -14,10 +14,12 @@ cd C:\Users\ADMin\Desktop\Rush01\ex00
 cc -Wall -Wextra -Werror -o rush01 *.c
 ```
 
-No output = success. It creates `rush01` (`rush01.exe` on Windows).
+No output = success. It creates `rush01` (`rush01.exe` on Windows) from the
+six source files: `main.c`, `parse.c`, `solve.c`, `rules.c`, `views.c`,
+`ft_print.c`.
 
 > **Windows note:** if you get `ld returned 5 exit status`, an old
-> `rush01.exe` is still running or locked. Fix it, then recompile:
+> `rush01.exe` is still running or locked. Kill it, then recompile:
 >
 > ```powershell
 > taskkill /IM rush01.exe /F
@@ -25,11 +27,11 @@ No output = success. It creates `rush01` (`rush01.exe` on Windows).
 
 ## 3. Valid inputs (should print a grid)
 
+The subject example — must print **exactly** this grid:
+
 ```powershell
 ./rush01 "4 3 2 1 1 2 2 2 4 3 2 1 1 2 2 2"
 ```
-
-Expected:
 
 ```
 1 2 3 4
@@ -64,6 +66,9 @@ In order: no argument, two arguments, 15 values, digit out of range,
 double space, leading space, trailing space, letter, impossible clues,
 well-formatted but contradictory clues.
 
+The strict parser is what catches the spacing cases: a valid input is
+exactly 31 characters (16 digits, 15 single spaces), nothing more.
+
 ## 5. Check line endings like the graders do (Git Bash / Linux only)
 
 ```bash
@@ -94,3 +99,5 @@ rm -f rush01 && cc -Wall -Wextra -Werror -o rush01 *.c && ./rush01 "4 3 2 1 1 2 
 - [ ] Subject example prints the exact expected grid
 - [ ] Every error input in section 4 prints `Error` + newline
 - [ ] Only `*.c` files in `ex00/` (no `.exe`, no `a.exe`, no extra files)
+- [ ] Norminette passes (functions ≤ 25 lines, ≤ 5 functions per file,
+      no `for` loops, only `write`/`malloc`/`free` from libc)
