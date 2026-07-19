@@ -6,10 +6,11 @@
 /*   By: username <username@student.42tokyo.jp>    #+#  +:+       +#+         */
 /*                                               +#+#+#+#+#+   +#+            */
 /*   Created: 2026/07/17 17:41:14 by username         #+#    #+#              */
-/*   Updated: 2026/07/19 00:51:51 by username        ###   ########.fr        */
+/*   Updated: 2026/07/19 01:32:43 by username        ###   ########.fr        */
 /*                                                                            */
 /* ************************************************************************** */
 
+/* count characters in str up to the null terminator */
 int	ft_strlen(char *str)
 {
 	int	i;
@@ -20,6 +21,7 @@ int	ft_strlen(char *str)
 	return (i);
 }
 
+/* valid input = 31 chars: digits 1-4 at even indexes, spaces at odd ones */
 int	ft_is_valid_format(char *str)
 {
 	int	i;
@@ -41,6 +43,14 @@ int	ft_is_valid_format(char *str)
 	return (1);
 }
 
+/*
+** Validate the format, then pull the 16 clue digits out of the string.
+** Clue order stored in the array:
+**   clues[0..3]   top    (columns, seen from above)
+**   clues[4..7]   bottom (columns, seen from below)
+**   clues[8..11]  left   (rows, seen from the left)
+**   clues[12..15] right  (rows, seen from the right)
+*/
 int	ft_parse(char *str, int *clues)
 {
 	int	i;
