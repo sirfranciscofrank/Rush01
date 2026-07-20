@@ -10,12 +10,12 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-int	ft_check_row(int grid[4][4], int row, int *clues);
-int	ft_check_col(int grid[4][4], int col, int *clues);
-int	ft_is_safe(int grid[4][4], int row, int col, int value);
+int ft_check_row(int grid[4][4], int row, int *clues);
+int ft_check_col(int grid[4][4], int col, int *clues);
+int ft_is_safe(int grid[4][4], int row, int col, int value);
 
 /* once a row or column is fully filled, check it against the view clues */
-int	ft_check_partial(int grid[4][4], int row, int col, int *clues)
+int ft_check_partial(int grid[4][4], int row, int col, int *clues)
 {
 	if (col == 3 && !ft_check_row(grid, row, clues))
 		return (0);
@@ -24,28 +24,27 @@ int	ft_check_partial(int grid[4][4], int row, int col, int *clues)
 	return (1);
 }
 
-int	ft_solve(int grid[4][4], int pos, int *clues)
+int ft_solve(int grid[4][4], int pos, int *clues)
 {
-	int	row;
-	int	col;
-	int	value;
+	int row;
+	int col;
+	int value;
 
 	if (pos == 16)
 		return (1);
 	/* convert the linear position (0-15) into row/col coordinates */
-	row = pos / 4;
-	col = pos % 4;
+	row = pos / 4; // which row  (pos 0-15 → row 0-3)
+	col = pos % 4;  // which column
 	value = 1;
-	while (value <= 4)
+	while (value <= 4) // try heights 1, 2, 3, 4 in order
 	{
 		/* reject value if it already appears in this row or column */
 		if (ft_is_safe(grid, row, col, value))
 		{
-			grid[row][col] = value;
-			if (ft_check_partial(grid, row, col, clues)
-					&& ft_solve(grid, pos + 1, clues))
-			return (1);
-			grid[row][col] = 0;
+			grid[row][col] = value; // 1. GUESS
+			if (ft_check_partial(...) && ft_solve(grid, pos + 1, clues))
+				return (1);		//    guess worked → done
+			grid[row][col] = 0; // 4. UNDO ← this is backtracking
 		}
 		value++;
 	}

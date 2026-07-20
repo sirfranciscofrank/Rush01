@@ -44,7 +44,7 @@ int	ft_is_safe(int grid[4][4], int row, int col, int value)
 	while (i < 4)
 	{
 		if (grid[row][i] == value || grid[i][col] == value)
-			return (0);
+			return (0);  // already used → reject this value
 		i++;
 	}
 	return (1);
